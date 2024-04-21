@@ -1,0 +1,74 @@
+[gd_scene load_steps=11 format=3 uid="uid://caqlgqc6dwv0r"]
+
+[ext_resource type="Script" path="res://world.gd" id="1_gvtx1"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_q1qx0"]
+ground_bottom_color = Color(0.363071, 0.605469, 0.582848, 1)
+
+[sub_resource type="Sky" id="Sky_4rt1b"]
+sky_material = SubResource("ProceduralSkyMaterial_q1qx0")
+
+[sub_resource type="Environment" id="Environment_5wvct"]
+background_mode = 2
+sky = SubResource("Sky_4rt1b")
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_dgov4"]
+vertices = PackedVector3Array(-49.5, 0.5, -49.5, -49.5, 0.5, 49.5, 49.5, 0.5, 49.5, 49.5, 0.5, -49.5)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_itaq6"]
+size = Vector2(100, 100)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7c7rn"]
+albedo_color = Color(0.591406, 0.757317, 0.863281, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l5oa4"]
+size = Vector3(150, 1, 150)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_8bov5"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_nfah4"]
+
+[node name="World" type="Node3D" node_paths=PackedStringArray("player")]
+script = ExtResource("1_gvtx1")
+player = NodePath("Player")
+move_speed = 4.0
+use_astar = true
+
+[node name="HexGrid" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5wvct")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(-0.626767, 0.571089, 0.530113, 0, -0.680324, 0.732911, 0.779207, 0.459365, 0.426405, 0, 16.8942, 0)
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_dgov4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+mesh = SubResource("PlaneMesh_itaq6")
+surface_material_override/0 = SubResource("StandardMaterial3D_7c7rn")
+
+[node name="ClickArea" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ClickArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
+shape = SubResource("BoxShape3D_l5oa4")
+
+[node name="Player" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_8bov5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/MeshInstance3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.397898, -0.66916)
+mesh = SubResource("BoxMesh_nfah4")
+
+[connection signal="input_event" from="ClickArea" to="." method="_on_click_area_input_event"]

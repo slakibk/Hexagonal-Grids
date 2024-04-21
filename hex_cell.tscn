@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxytn1qcdgnh5"]
+
+[ext_resource type="PackedScene" uid="uid://bcn771m0u0vwh" path="res://hex_model.tscn" id="1_12tdw"]
+[ext_resource type="Script" path="res://hex_cell.gd" id="1_dlxtq"]
+
+[node name="HexCell" type="Node3D"]
+script = ExtResource("1_dlxtq")
+
+[node name="Model" parent="." instance=ExtResource("1_12tdw")]
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.340379, 0)
+billboard = 1
+text = "X,Y"
+font_size = 100
+
+[editable path="Model"]
